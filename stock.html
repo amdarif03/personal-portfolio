@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>frontend and backend Project Details</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/themes/prism.min.css" rel="stylesheet" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f4f4f4;
+        }
+
+        .container {
+            width: 80%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1,
+        h2 {
+            color: #333;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
+
+        .code-editor {
+            background: #1e1e1e;
+            color: #dcdcdc;
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            position: relative;
+        }
+
+        .editor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #333;
+            margin-bottom: 10px;
+        }
+
+        .file-name {
+            color: #9cdcfe;
+            font-weight: bold;
+        }
+
+        .editor-controls {
+            display: flex;
+        }
+
+        .editor-control {
+            background: #333;
+            border: none;
+            color: #ccc;
+            padding: 5px;
+            margin-left: 5px;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .editor-control:hover {
+            background: #444;
+        }
+
+        pre {
+            margin: 0;
+            overflow: auto;
+        }
+
+        .copy-button {
+            background-color: #007acc;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        .copy-button:hover {
+            background-color: #005f9e;
+        }
+
+        .section-content {
+            background: #e0e0e0;
+            padding: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav>
+            <a href="index.html" class="back-button">← Back to Projects</a>
+            <h1>stock--market</h1>
+        </nav>
+    </header>
+    <section class="project-detail">
+        <div class="container">
+
+            <h2>Project Detail Page:</h2>
+            <p>To create a backend section on your website that includes real-time stock market tracking and a code copy feature, you can follow the structure below. This page will display the backend code for both the weather monitoring and stock market tracking applications, and will allow users to copy the code directly..</p>
+        </div>
+        <div class="container">
+            <h2>It Works:</h2>
+            <p>This Weather Monitoring Application uses the OpenWeatherMap API to fetch real-time weather data based on
+                user input. It displays current weather conditions, including temperature, humidity, and wind speed. The
+                application utilizes Python's `requests` library for API calls and `tkinter` for the graphical user
+                interface.</p>
+        </div>
+
+        <div class="container">
+            <h1>How to Use:</h1>
+            <h2>To use the stock market Application, follow these steps:</h2>
+            <ol>
+               <ul> Save the HTML File: Save the code to a file named backend_project.html in your project directory.
+                Link the File: Ensure this file is accessible from your main website, either by adding a link in your navigation menu or linking it from other pages.
+                Serve the File: Open the file in your browser or deploy it to your web server.</ul>
+            </ol>
+            <p>Ensure you have a valid OpenWeatherMap API key to retrieve weather data. Replace
+                `your_openweathermap_api_key_here` in the code with your actual API key.</p>
+        </div>
+
+        <div class="container">
+            <h2>More Details:</h2>
+            <p>The application was designed with simplicity and functionality in mind. It demonstrates the use of APIs
+                in Python and provides a practical example of integrating external services into a Python application.
+                For additional features, you could implement options for different units of measurement, historical
+                weather data, or forecasts.</p>
+        </div>
+
+
+        <div class="container">
+            <h1>1. Backend Setup</h1>
+            1. Install the necessary libraries:
+
+            You need to install Flask and yfinance if you haven't already. You can install them using <br>pip install
+            Flask yfinance
+            </div>
+
+    </section>
+
+    <!-- stock market  Code Section -->
+    <section id="stoct-market">
+        <h2>stock--market </h2>
+        <div class="section-content">
+            <p>For real-time stock market tracking, you'll need a backend service to fetch and serve the stock data. You
+                can use Flask for this purpose..</p>
+            <div class="code-editor">
+                <div class="editor-header">
+                    <span class="file-name">Create a Flask App (app.py):</span>
+                    <span class="editor-controls">
+                        <button class="editor-control">🗙</button>
+                        <button class="editor-control">-</button>
+                        <button class="editor-control">+</button>
+                    </span>
+                </div>
+                <pre><code class="language-python">
+                        import yfinance as yf
+                        from flask import Flask, jsonify, request
+                        
+                        app = Flask(__name__)
+                        
+                        @app.route('/api/stock/<ticker>', methods=['GET'])
+                        def get_stock(ticker):
+                            try:
+                                stock = yf.Ticker(ticker)
+                                data = stock.history(period='1d', interval='1m')
+                                latest_data = data.iloc[-1]  # Get the latest data point
+                                result = {
+                                    'time': latest_data.name.strftime('%Y-%m-%d %H:%M:%S'),
+                                    'open': latest_data['Open'],
+                                    'high': latest_data['High'],
+                                    'low': latest_data['Low'],
+                                    'close': latest_data['Close'],
+                                    'volume': latest_data['Volume']
+                                }
+                                return jsonify(result)
+                            except Exception as e:
+                                return jsonify({'error': str(e)}), 500
+                        
+                        if __name__ == '__main__':
+                            app.run(debug=True)
+
+                            
+                        
+    </code></pre>
+                <button onclick="copyCode('weather_app.py')" class="copy-button">Copy Code</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stock Market Tracker Code Section -->
+    <div class="containera">
+        <H1>How to Run the Script</H1>
+    </div>
+    <div class="container">
+        <h1> 1 - Save the Script</h1>
+
+        <h3>Save the code to a file, for example, stock_tracker.py.</h3>
+
+        <h1> 2 -Run the Script</h1>
+
+        <h3>Open your terminal or command prompt, navigate to the directory where you saved the script, and run:
+        </h3>
+
+        <h1>python stock_tracker.py
+            Enter a Stock Ticker Symbol</h1>
+
+        <h3>When prompted, enter the stock ticker symbol you want to track (e.g., AAPL for Apple Inc., TSLA for Tesla,
+            MSFT for Microsoft).
+        </h3>
+        <h1>Explanation</h1>
+        <h2>fetch_stock_data(ticker):</h2> <p>This function uses yfinance to fetch historical stock data. It retrieves data
+        for the past day with minute-level. <br></p>
+        <h2>display_stock_data(ticker):</h2> <p>This function continuously fetches the latest stock data every 60 seconds
+        and prints it to the console. It displays the open, high, low, close prices, and volume for the most recent
+        minute. </p><br>
+        <h2>Error Handling:</h2> <p>The script handles exceptions to ensure it continues running in case of errors, and
+        stops gracefully if interrupted.</p>
+        <h1>Improvements</h1>
+        <h2>GUI or Web Interface:</h2> <p>You can enhance the script by adding a graphical user interface (GUI) using
+        libraries like Tkinter or a web interface using Flask or Django.</p>
+        <h2>Advanced Features:</h2> <p>Implement additional features such as historical data analysis, notifications for
+        price changes, or integration with other data sources.</p>
+    </div>
+    <section id="stock-market-tracker">
+        <h2>Stock Market Tracker Code</h2>
+        <div class="section-content">
+            <p>This section contains the frontend code for the stock market tracker application.</p>
+            <div class="code-editor">
+                <div class="editor-header">
+                    <span class="file-name">stock_tracker.py</span>
+                    <span class="editor-controls">
+                        <button class="editor-control">🗙</button>
+                        <button class="editor-control">-</button>
+                        <button class="editor-control">+</button>
+                    </span>
+                </div>
+                <pre><code class="language-python">
+                        import yfinance as yf
+                        import pandas as pd
+                        import time
+                        
+                        def fetch_stock_data(ticker):
+                            """
+                            Fetches real-time stock data for a given ticker symbol.
+                            """
+                            stock = yf.Ticker(ticker)
+                            data = stock.history(period='1d', interval='1m')
+                            return data
+                        
+                        def display_stock_data(ticker):
+                            """
+                            Continuously fetches and displays real-time stock data for a given ticker symbol.
+                            """
+                            print(f"Real-Time Stock Market Tracker for {ticker}")
+                            print(f"{'Time':<20} {'Open':<10} {'High':<10} {'Low':<10} {'Close':<10} {'Volume':<10}")
+                            
+                            while True:
+                                try:
+                                    data = fetch_stock_data(ticker)
+                                    latest_data = data.iloc[-1]
+                                    current_time = pd.to_datetime(latest_data.name).strftime('%Y-%m-%d %H:%M:%S')
+                                    print(f"{current_time:<20} {latest_data['Open']:<10.2f} {latest_data['High']:<10.2f} {latest_data['Low']:<10.2f} {latest_data['Close']:<10.2f} {latest_data['Volume']:<10}")
+                                    
+                                    # Wait for 60 seconds before fetching data again
+                                    time.sleep(60)
+                                except KeyboardInterrupt:
+                                    print("\nReal-Time Stock Market Tracker stopped.")
+                                    break
+                                except Exception as e:
+                                    print(f"An error occurred: {e}")
+                                    time.sleep(60)
+                        
+                        if __name__ == "__main__":
+                            ticker = input("Enter the stock ticker symbol (e.g., AAPL, TSLA, MSFT): ").upper()
+                            display_stock_data(ticker)
+                        
+    </code></pre>
+                <button onclick="copyCode('stock_tracker.py')" class="copy-button">Copy Code</button>
+            </div>
+        </div>
+    </section>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.27.0/prism.min.js"></script>
+    <script>
+        function copyCode(filename) {
+            const code = document.querySelector(`.code-editor .language-python`).textContent;
+            navigator.clipboard.writeText(code).then(function () {
+                alert('Code copied to clipboard!');
+            }, function (err) {
+                alert('Failed to copy code: ' + err);
+            });
+        }
+    </script>
+</body>
+
+</html>
